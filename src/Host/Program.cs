@@ -1,5 +1,7 @@
 using Core;
+using Core.Services;
 using Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,5 +38,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 app.MapGet("/", () => "Hello World!");
+
+app.MapGet("/github/{endpoint}", async (string endpoint, [FromServices] IApiService apiService) =>
+{
+    return await apiService.FetchFromGitHubAsync(endpoint);
+});
+
+app.MapGet("/spotify/{endpoint}", async (string endpoint, [FromServices] IApiService apiService) =>
+{
+    return await apiService.FetchFromSpotifyAsync(endpoint);
+});
 
 app.Run();
